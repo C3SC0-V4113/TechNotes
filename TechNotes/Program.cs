@@ -1,4 +1,4 @@
-using TechNotes.Application.Notes;
+using TechNotes.Application;
 using TechNotes.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped<INoteService, NotesService>();
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
