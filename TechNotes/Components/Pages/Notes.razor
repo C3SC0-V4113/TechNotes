@@ -30,8 +30,7 @@ else
     private List<Note> notes = new List<Note>();
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(1000); // Simulate async data fetching
-        List<Note>? result = NoteService.GetAllNotes();
+        List<Note>? result = await NoteService.GetAllNotesAsync();
         notes = result ?? new List<Note>();
     }
 }
