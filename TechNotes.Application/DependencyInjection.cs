@@ -11,8 +11,6 @@ public static class DependencyInjection
         {
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
         });
-        // Register application services here
-        services.AddScoped<INoteService, NotesService>();
 
         return services;
     }
