@@ -3,6 +3,7 @@
 @inject ISender Sender;
 <PageTitle>Notes</PageTitle>
 <h3>Notes</h3>
+<a href="/note-editor" class="btn btn-primary">Create New Note</a>
 @if (notes.Count == 0)
 {
     <p>Loading notes...</p>
@@ -10,7 +11,7 @@
 else
 {
     <ul>
-        @foreach (Note note in notes)
+        @foreach (NoteResponse note in notes)
         {
             <li>
                 <strong>@note.Title</strong> - Created at: @note.CreatedAt.ToString("g")
@@ -25,10 +26,10 @@ else
 }
 
 @code {
-    private List<Note> notes = new List<Note>();
+    private List<NoteResponse> notes = new List<NoteResponse>();
     protected override async Task OnInitializedAsync()
     {
-        List<Note>? result = await Sender.Send(new GetNotesQuery());
-        notes = result ?? new List<Note>();
+        List<NoteResponse>? result = await Sender.Send(new GetNotesQuery());
+        notes = result ?? new List<NoteResponse>();
     }
 }

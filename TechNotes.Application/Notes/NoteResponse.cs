@@ -4,6 +4,7 @@ public record struct NoteResponse(
     int Id,
     string Title,
     string? Content,
-    DateTime PublishedAt,
+    DateTime CreatedAt,
+    DateTime? PublishedAt,
     bool IsPublished
 );
