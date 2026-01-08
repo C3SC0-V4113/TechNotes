@@ -3,7 +3,7 @@ using TechNotes.Domain.Notes;
 
 namespace TechNotes.Application.Notes.CreateNote;
 
-public class CreateNoteCommand : IRequest<Note>
+public class CreateNoteCommand : IRequest<NoteResponse>
 {
     public required string Title { get; set; }
     public string? Content { get; set; }
