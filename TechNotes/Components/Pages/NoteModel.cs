@@ -1,6 +1,6 @@
 namespace TechNotes.Components.Pages;
 
-public class NotesModel
+public class NoteModel
 {
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
