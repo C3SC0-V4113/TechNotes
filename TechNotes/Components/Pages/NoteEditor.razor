@@ -8,9 +8,11 @@
     <InputTextArea @bind-Value="Note.Content" placeholder="Content" class="form-control mb-2" rows="5" />
     <label>Select a published date</label>
     <InputDate @bind-Value="Note.PublishedAt" class="form-control mb-2" />
-    <InputCheckbox @bind-Value="Note.IsPublished" class="form-check-input mb-2" />
-    <label class="form-check-label mb-2">Is Published</label>
-    <button type="submit" class="btn btn-primary">Create Note</button>
+    <div class="form-check">
+        <InputCheckbox @bind-Value="Note.IsPublished" class="form-check-input mb-2" />
+        <label class="form-check-label mb-2">Is Published</label>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3 w-100">Create Note</button>
 </EditForm>
 
 
