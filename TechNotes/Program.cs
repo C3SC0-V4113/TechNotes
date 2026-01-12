@@ -1,5 +1,5 @@
+using TechNotes;
 using TechNotes.Application;
-using TechNotes.Components;
 using TechNotes.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
