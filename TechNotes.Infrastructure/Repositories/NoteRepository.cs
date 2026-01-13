@@ -25,4 +25,23 @@ public class NoteRepository : INoteRepository
     {
         return await _context.Notes.FindAsync(id);
     }
+    public async Task<Note?> UpdateNoteAsync(Note note)
+    {
+        var existingNote = _context.Notes.Find(note.Id);
+        if (existingNote == null)
+        {
+            return await Task.FromResult<Note?>(null);
+        }
+
+        existingNote.Title = note.Title;
+        existingNote.Content = note.Content;
+        existingNote.PublishedAt = note.PublishedAt;
+        existingNote.IsPublished = note.IsPublished;
+        existingNote.UpdatedAt = DateTime.UtcNow;
+
+        _context.Notes.Update(existingNote);
+        await _context.SaveChangesAsync();
+
+        return await Task.FromResult<Note?>(existingNote);
+    }
 }
