@@ -17,6 +17,10 @@ public class UpdateNoteCommandHandler : IRequestHandler<UpdateNoteCommand, NoteR
     {
         var existingNote = request.Adapt<Note>();
         var updatedNote = await _noteRepository.UpdateNoteAsync(existingNote);
-        return await updatedNote.Adapt<Task<NoteResponse?>>();
+        if (updatedNote == null)
+        {
+            return null;
+        }
+        return updatedNote.Adapt<NoteResponse>();
     }
 }

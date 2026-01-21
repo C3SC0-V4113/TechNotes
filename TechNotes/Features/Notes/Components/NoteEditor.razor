@@ -27,24 +27,57 @@ else
             <InputCheckbox @bind-Value="Note.IsPublished" class="form-check-input mb-2" />
             <label class="form-check-label mb-2">Is Published</label>
         </div>
-        <button type="submit" class="btn btn-primary mt-3 w-100">Create Note</button>
+        <button type="submit" class="btn btn-primary mt-3 w-100">@(isEditMode ? "Update Note" : "Create Note")</button>
     </EditForm>
 }
 
 
 @code {
-    private bool isEditMode => NoteId.HasValue;
+    private bool isEditMode => NoteId != null;
     [SupplyParameterFromForm]
     private NoteModel? Note { get; set; }
     [Parameter]
     public int? NoteId { get; set; }
-    protected override void OnInitialized() => Note ??= new NoteModel();
+    protected override async Task OnParametersSetAsync()
+    {
+        if (isEditMode)
+        {
+            var result = await Sender.Send(new GetNoteByIdQuery
+            {
+                Id = NoteId!.Value
+            });
+
+            if (result != null)
+            {
+                Note ??= result.Adapt<NoteModel>();
+                Note.Id = NoteId.Value;
+            }
+        }
+        else
+        {
+            Note ??= new NoteModel();
+        }
+    }
     private async Task HandleSubmit()
     {
-        var command = Note.Adapt<CreateNoteCommand>();
-        var result = await Sender.Send(command);
+        if (isEditMode)
+        {
+            var command = Note.Adapt<UpdateNoteCommand>();
+            var result = await Sender.Send(command);
 
-        Note = result.Adapt<NoteModel>();
-        Console.WriteLine("Note created with ID: " + Note.Id);
+            if (result != null)
+            {
+                Note = result.Adapt<NoteModel>();
+            }
+            Console.WriteLine("Note updated successfully.");
+        }
+        else
+        {
+            var command = Note.Adapt<CreateNoteCommand>();
+            var result = await Sender.Send(command);
+
+            Note = result.Adapt<NoteModel>();
+            Console.WriteLine("Note created with ID: " + Note.Id);
+        }
     }
 }
