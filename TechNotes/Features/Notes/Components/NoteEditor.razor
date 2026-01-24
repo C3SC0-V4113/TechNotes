@@ -1,6 +1,7 @@
 ﻿@page "/note-editor"
 @page "/note-editor/{NoteId:int}"
 @inject ISender Sender
+@inject NavigationManager NavigationManager
 
 @if (isEditMode && Note != null)
 {
@@ -29,6 +30,13 @@ else
         </div>
         <button type="submit" class="btn btn-primary mt-3 w-100">@(isEditMode ? "Update Note" : "Create Note")</button>
     </EditForm>
+    @if (isEditMode)
+    {
+        <form @onsubmit="DeleteNote" @formname="DeleteNoteForm" method="post">
+            <button type="submit" class="btn btn-danger mt-2">Delete Note</button>
+            <AntiforgeryToken />
+        </form>
+    }
 }
 
 
@@ -78,6 +86,27 @@ else
 
             Note = result.Adapt<NoteModel>();
             Console.WriteLine("Note created with ID: " + Note.Id);
+        }
+    }
+
+    private async Task DeleteNote()
+    {
+        if (isEditMode)
+        {
+            var command = new DeleteNoteCommand
+            {
+                Id = NoteId!.Value
+            };
+            bool isSuccess = await Sender.Send(command);
+            if (isSuccess)
+            {
+                Console.WriteLine("Note deleted successfully.");
+                NavigationManager.NavigateTo("/notes");
+            }
+            else
+            {
+                Console.WriteLine("Failed to delete the note.");
+            }
         }
     }
 }
