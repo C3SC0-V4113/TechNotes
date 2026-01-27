@@ -12,10 +12,11 @@ public class Result
         ErrorMessage = errorMessage;
     }
 
-    public static Result Success() => new Result(true);
-    public static Result Failure(string errorMessage) => new Result(false, errorMessage);
-    public static Result<T> Ok<T>(T? value) => new Result<T>(value, true, null);
+    public static Result Ok() => new Result(true);
+    public static Result Fail(string errorMessage) => new Result(false, errorMessage);
+    public static Result<T> Ok<T>(T? value) => new Result<T>(value, true, string.Empty);
     public static Result<T> Fail<T>(string errorMessage) => new Result<T>(default, false, errorMessage);
+    public static Result<T> FromValue<T>(T? value) => value != null ? Ok(value) : Fail<T>("Value can not be null");
 }
 
 public class Result<T> : Result
@@ -27,4 +28,8 @@ public class Result<T> : Result
     {
         Value = value;
     }
+
+    public static implicit operator Result<T>(T? value) => FromValue(value);
+
+    public static implicit operator T?(Result<T> result) => result.Value;
 }
