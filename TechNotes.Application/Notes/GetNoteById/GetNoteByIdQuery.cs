@@ -1,8 +1,8 @@
-using MediatR;
+using TechNotes.Application.Abstractions.RequestHandling;
 
 namespace TechNotes.Application.Notes.GetNoteById;
 
-public class GetNoteByIdQuery : IRequest<NoteResponse?>
+public class GetNoteByIdQuery : IQuery<NoteResponse?>
 {
     public int Id { get; set; }
 }
