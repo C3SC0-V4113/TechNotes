@@ -39,9 +39,12 @@ else
     }
 }
 
+<span class="text-danger">@errorMessage</span>
+
 
 @code {
     private bool isEditMode => NoteId != null;
+    private string errorMessage = string.Empty;
     [SupplyParameterFromForm]
     private NoteModel? Note { get; set; }
     [Parameter]
@@ -55,10 +58,14 @@ else
                 Id = NoteId!.Value
             });
 
-            if (result != null)
+            if (result.IsSuccessful)
             {
-                Note ??= result.Adapt<NoteModel>();
+                Note ??= result.Value.Adapt<NoteModel>();
                 Note.Id = NoteId.Value;
+            }
+            else
+            {
+                SetErrorMessage(result.ErrorMessage);
             }
         }
         else
@@ -73,16 +80,27 @@ else
             var command = Note.Adapt<UpdateNoteCommand>();
             var result = await Sender.Send(command);
 
-            if (result != null)
+            if (result.IsSuccessful)
             {
-                Note = result.Adapt<NoteModel>();
+                Note = result.Value.Adapt<NoteModel>();
+                Console.WriteLine("Note updated successfully.");
+                NavigationManager.NavigateTo("/notes");
             }
-            Console.WriteLine("Note updated successfully.");
+            else
+            {
+                SetErrorMessage(result.ErrorMessage);
+            }
         }
         else
         {
             var command = Note.Adapt<CreateNoteCommand>();
             var result = await Sender.Send(command);
+
+            if (result.HasFailed)
+            {
+                SetErrorMessage(result.ErrorMessage);
+                return;
+            }
 
             Note = result.Adapt<NoteModel>();
             Console.WriteLine("Note created with ID: " + Note.Id);
@@ -97,8 +115,8 @@ else
             {
                 Id = NoteId!.Value
             };
-            bool isSuccess = await Sender.Send(command);
-            if (isSuccess)
+            var result = await Sender.Send(command);
+            if (result.IsSuccessful)
             {
                 Console.WriteLine("Note deleted successfully.");
                 NavigationManager.NavigateTo("/notes");
@@ -108,5 +126,10 @@ else
                 Console.WriteLine("Failed to delete the note.");
             }
         }
+    }
+
+    private void SetErrorMessage(string? message)
+    {
+        errorMessage = message ?? string.Empty;
     }
 }
