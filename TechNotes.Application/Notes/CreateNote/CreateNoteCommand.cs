@@ -1,5 +1,3 @@
-using TechNotes.Application.Abstractions.RequestHandling;
-
 namespace TechNotes.Application.Notes.CreateNote;
 
 public class CreateNoteCommand : ICommand<NoteResponse>

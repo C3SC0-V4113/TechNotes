@@ -1,7 +1,3 @@
-using TechNotes.Application.Abstractions.RequestHandling;
-using TechNotes.Domain.Abstractions;
-using TechNotes.Domain.Notes;
-
 namespace TechNotes.Application.Notes.DeleteNote;
 
 public class DeleteNoteCommandHandler : ICommandHandler<DeleteNoteCommand>

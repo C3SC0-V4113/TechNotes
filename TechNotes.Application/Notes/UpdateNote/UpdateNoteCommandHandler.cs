@@ -1,8 +1,3 @@
-using Mapster;
-using TechNotes.Application.Abstractions.RequestHandling;
-using TechNotes.Domain.Abstractions;
-using TechNotes.Domain.Notes;
-
 namespace TechNotes.Application.Notes.UpdateNote;
 
 public class UpdateNoteCommandHandler : ICommandHandler<UpdateNoteCommand, NoteResponse?>
