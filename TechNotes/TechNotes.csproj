@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Notes\Services\" />
     <Folder Include="Styles\" />
   </ItemGroup>
 
