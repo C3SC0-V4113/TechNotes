@@ -8,4 +8,5 @@ public class Note : Entity
     public string? Content { get; set; }
     public DateTime? PublishedAt { get; set; }
     public bool IsPublished { get; set; } = false;
+    public string? UserId { get; set; }
 }
