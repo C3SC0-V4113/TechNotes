@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Abstractions\" />
     <Folder Include="Notes\" />
+    <Folder Include="User\" />
   </ItemGroup>
 
 </Project>
