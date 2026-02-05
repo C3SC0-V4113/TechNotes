@@ -1,6 +1,4 @@
-using TechNotes.Application.Authentication;
-
-namespace TechNotes.Application.Abstractions;
+namespace TechNotes.Application.Authentication;
 
 public interface IAuthenticationService
 {
