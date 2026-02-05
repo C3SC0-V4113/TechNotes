@@ -17,6 +17,8 @@
     <Folder Include="Notes\DeleteNote\" />
     <Folder Include="Notes\GetNotes\" />
     <Folder Include="Notes\UpdateNote\" />
+    <Folder Include="Users\" />
+    <Folder Include="Users\LoginUser\" />
   </ItemGroup>
 
   <ItemGroup>
