@@ -19,6 +19,7 @@
     <Folder Include="Notes\UpdateNote\" />
     <Folder Include="Users\" />
     <Folder Include="Users\LoginUser\" />
+    <Folder Include="Users\RegisterUser\" />
   </ItemGroup>
 
   <ItemGroup>
