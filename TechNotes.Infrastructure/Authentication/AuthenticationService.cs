@@ -12,9 +12,9 @@ public class AuthenticationService : IAuthenticationService
         _signInManager = signInManager;
         _userManager = userManager;
     }
-    public async Task<bool> LoginUserAsync(string email, string password)
+    public async Task<bool> LoginUserAsync(string userName, string password)
     {
-        var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
+        var result = await _signInManager.PasswordSignInAsync(userName, password, false, false);
         return result.Succeeded;
     }
 
