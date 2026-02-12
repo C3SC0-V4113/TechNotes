@@ -1,6 +1,12 @@
 ﻿<Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(NotFound)">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(NoteLayout)" />
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(NoteLayout)">
+            <NotAuthorized>
+                <p class="text-center text-gray-500 mt-10">
+                    No tienes permiso para acceder a esta página. Por favor, inicia sesión para continuar.
+                </p>
+            </NotAuthorized>
+        </AuthorizeRouteView>
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>

@@ -2,6 +2,7 @@
 @page "/note-editor/{NoteId:int}"
 @inject ISender Sender
 @inject NavigationManager NavigationManager
+@attribute [Authorize]
 
 @{
     var pageTitle = isEditMode ? "Edit Note" : "Create Note";
@@ -20,7 +21,8 @@
                 <h1 class="text-2xl font-semibold text-gray-900 sm:text-3xl">@pageTitle</h1>
                 <p class="mt-2 text-sm text-gray-600">@pageSubtitle</p>
             </div>
-            <a href="/notes" class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50">
+            <a href="/notes"
+                   class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50">
                 Back to Notes
             </a>
         </div>
@@ -38,51 +40,60 @@
                 <EditForm Model="Note" OnSubmit="HandleSubmit" FormName="NoteEditorForm" class="space-y-6">
                     <div>
                         <label for="note-title" class="block text-sm font-medium text-gray-700">Title</label>
-                        <InputText id="note-title" @bind-Value="Note!.Title" placeholder="Give your note a title" class="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
+                        <InputText id="note-title" @bind-Value="Note!.Title" placeholder="Give your note a title"
+                                   class="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
                     </div>
 
                     <div>
                         <label for="note-content" class="block text-sm font-medium text-gray-700">Content</label>
-                        <InputTextArea id="note-content" @bind-Value="Note.Content" placeholder="Write your note here..." class="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" rows="6" />
+                        <InputTextArea id="note-content" @bind-Value="Note.Content" placeholder="Write your note here..."
+                                       class="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                                       rows="6" />
                     </div>
 
                     <div>
-                        <label for="note-published-at" class="block text-sm font-medium text-gray-700">Published Date</label>
-                        <InputDate id="note-published-at" @bind-Value="Note.PublishedAt" class="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
-                    </div>
+                        <label for="note-published-at" class="block text-sm font-medium text-gray-700">Published
+                            Date</label>
+                            <InputDate id="note-published-at" @bind-Value="Note.PublishedAt"
+                                       class="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
+                        </div>
 
-                    <div class="flex items-center gap-3">
-                        <InputCheckbox id="note-published" @bind-Value="Note.IsPublished" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                        <label for="note-published" class="text-sm font-medium text-gray-700">Published</label>
-                    </div>
+                        <div class="flex items-center gap-3">
+                            <InputCheckbox id="note-published" @bind-Value="Note.IsPublished"
+                                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            <label for="note-published" class="text-sm font-medium text-gray-700">Published</label>
+                        </div>
 
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <button type="submit" class="inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 sm:w-auto">
-                            @(isEditMode ? "Update Note" : "Create Note")
-                        </button>
-                        <p class="text-xs text-gray-500">Your changes are saved immediately.</p>
-                    </div>
-                </EditForm>
-
-                @if (isEditMode)
-                {
-                    <div class="mt-6 border-t border-gray-200 pt-6">
-                        <form @onsubmit="DeleteNote" @formname="DeleteNoteForm" method="post" class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-900">Delete this note</p>
-                                <p class="text-xs text-gray-500">This action cannot be undone.</p>
-                            </div>
-                            <AntiforgeryToken />
-                            <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700">
-                                Delete Note
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <button type="submit"
+                                    class="inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 sm:w-auto">
+                                @(isEditMode ? "Update Note" : "Create Note")
                             </button>
-                        </form>
-                    </div>
+                            <p class="text-xs text-gray-500">Your changes are saved immediately.</p>
+                        </div>
+                    </EditForm>
+
+                    @if (isEditMode)
+                    {
+                        <div class="mt-6 border-t border-gray-200 pt-6">
+                            <form @onsubmit="DeleteNote" @formname="DeleteNoteForm" method="post"
+                                  class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">Delete this note</p>
+                                    <p class="text-xs text-gray-500">This action cannot be undone.</p>
+                                </div>
+                                <AntiforgeryToken />
+                                <button type="submit"
+                                        class="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700">
+                                    Delete Note
+                                </button>
+                            </form>
+                        </div>
+                    }
                 }
-            }
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
 @code {
