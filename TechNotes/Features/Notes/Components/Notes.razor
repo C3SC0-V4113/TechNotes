@@ -100,8 +100,9 @@ else
 
                     <!-- Pie de la nota -->
                     <div class="px-5 bg-white border-t-2 border-gray-300 shadow-inner h-16 flex items-center">
-                        <div class="flex items-center justify-between text-sm w-full">
-                            <p class="font-semibold text-gray-800">@note.CreatedAt.ToString("dd MMM yyyy")</p>
+                        <div class="flex flex-col items-center justify-between text-sm w-full">
+                            <p class="font-semibold text-gray-800 pt-2">@note.CreatedAt.ToString("dd MMM yyyy")</p>
+                            <p class="text-sm font-medium text-gray-600">@note.UserName</p>
                         </div>
                     </div>
                 </div>

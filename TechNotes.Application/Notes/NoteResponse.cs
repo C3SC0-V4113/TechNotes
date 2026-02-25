@@ -6,5 +6,6 @@ public record struct NoteResponse(
     string? Content,
     DateTime CreatedAt,
     DateTime? PublishedAt,
-    bool IsPublished
+    bool IsPublished,
+    string? UserName
 );
