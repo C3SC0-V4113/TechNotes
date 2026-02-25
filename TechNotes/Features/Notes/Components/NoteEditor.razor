@@ -2,6 +2,7 @@
 @page "/note-editor/{NoteId:int}"
 @inject ISender Sender
 @inject NavigationManager NavigationManager
+@inject UserManager<User> UserManager
 @attribute [Authorize]
 
 @{
@@ -103,6 +104,8 @@
     private NoteModel? Note { get; set; }
     [Parameter]
     public int? NoteId { get; set; }
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
     protected override async Task OnParametersSetAsync()
     {
         if (isEditMode)
@@ -148,6 +151,7 @@
         else
         {
             var command = Note.Adapt<CreateNoteCommand>();
+            command.UserId = UserManager.GetUserId(HttpContext.User);
             var result = await Sender.Send(command);
 
             if (result.HasFailed)
@@ -158,6 +162,7 @@
 
             Note = result.Adapt<NoteModel>();
             Console.WriteLine("Note created with ID: " + Note.Id);
+            NavigationManager.NavigateTo("/notes");
         }
     }
 
