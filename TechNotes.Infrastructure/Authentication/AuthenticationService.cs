@@ -22,6 +22,10 @@ public class AuthenticationService : IAuthenticationService
     {
         var user = new User { UserName = userName, Email = email, EmailConfirmed = true };
         var result = await _userManager.CreateAsync(user, password);
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(user, "Reader");
+        }
         return new RegisterUserResponse
         {
             Errors = result.Errors.Select(e => e.Description).ToList(),
