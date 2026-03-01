@@ -20,13 +20,15 @@
                     <p class="text-sm text-gray-500 mt-1">Organize your ideas and thoughts</p>
                 </div>
             </div>
-            <a href="/note-editor"
-                   class="inline-flex items-center px-6 py-3  font-semibold rounded-xl shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                New Note
-            </a>
+            <AuthorizeView Roles="Admin, Writer">
+                <a href="/note-editor"
+                       class="inline-flex items-center px-6 py-3  font-semibold rounded-xl shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    New Note
+                </a>
+            </AuthorizeView>
         </div>
     </div>
 </div>
@@ -61,7 +63,7 @@ else
                     <!-- Cabecera de la nota -->
                     <div class="p-3 flex-1 flex flex-col">
                         <div class="flex items-start justify-between mb-3">
-                            <AuthorizeView>
+                            <AuthorizeView Roles="Admin, Writer">
                                 <Authorized>
                                     <a href="/note-editor/@note.Id"
                                            class="font-semibold text-gray-800 text-base leading-tight line-clamp-2 flex-1 pr-2">

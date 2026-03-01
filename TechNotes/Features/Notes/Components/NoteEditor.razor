@@ -3,7 +3,7 @@
 @inject ISender Sender
 @inject NavigationManager NavigationManager
 @inject UserManager<User> UserManager
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin, Writer")]
 
 @{
     var pageTitle = isEditMode ? "Edit Note" : "Create Note";
