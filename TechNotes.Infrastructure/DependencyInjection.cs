@@ -26,7 +26,7 @@ public static class DependencyInjection
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         AddAuthentication(services);
-
+        services.AddHttpContextAccessor();
         return services;
     }
 
