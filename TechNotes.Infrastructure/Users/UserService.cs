@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using TechNotes.Application.Exceptions;
 using TechNotes.Application.Users;
 using TechNotes.Domain.Notes;
 
@@ -16,24 +17,53 @@ public class UserService : IUserService
         _httpContextAccessor = httpContextAccessor;
         _noteRepository = noteRepository;
     }
-    public Task<bool> CurrentUserCanCreateNoteAsync()
+    public async Task<bool> CurrentUserCanCreateNoteAsync()
     {
-        throw new NotImplementedException();
+        var user = await GetCurrentUserAsync();
+        if (user == null)
+        {
+            return false;
+        }
+
+        var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+        var isWriter = await _userManager.IsInRoleAsync(user, "Writer");
+        return isAdmin || isWriter;
     }
 
-    public Task<bool> CurrentUserCanEditNoteAsync(int noteId)
+    public async Task<bool> CurrentUserCanEditNoteAsync(int noteId)
     {
-        throw new NotImplementedException();
+        var user = await GetCurrentUserAsync();
+        if (user == null)
+        {
+            return false;
+        }
+        var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+        var isWriter = await _userManager.IsInRoleAsync(user, "Writer");
+
+        var note = await _noteRepository.GetNoteByIdAsync(noteId);
+        if (note == null)
+        {
+            return false;
+        }
+        var isAuthorized = isAdmin || (isWriter && note.UserId == user.Id);
+        return isAuthorized;
     }
 
-    public Task<string> GetCurrentUserIdAsync()
+    public async Task<string> GetCurrentUserIdAsync()
     {
-        throw new NotImplementedException();
+        var user = await GetCurrentUserAsync();
+        if (user == null)
+        {
+            throw new UserNotAuthorizedException();
+        }
+        return user.Id;
     }
 
-    public Task<bool> IsCurrentUserInRoleAsync(string role)
+    public async Task<bool> IsCurrentUserInRoleAsync(string role)
     {
-        throw new NotImplementedException();
+        var user = await GetCurrentUserAsync();
+        var isUserInRole = user != null && await _userManager.IsInRoleAsync(user, role);
+        return isUserInRole;
     }
 
     private async Task<User?> GetCurrentUserAsync()
