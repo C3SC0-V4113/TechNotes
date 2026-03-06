@@ -75,23 +75,25 @@
                         </div>
                     </EditForm>
 
-                    @if (isEditMode)
-                    {
-                        <div class="mt-6 border-t border-gray-200 pt-6">
-                            <form @onsubmit="DeleteNote" @formname="DeleteNoteForm" method="post"
-                                  class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900">Delete this note</p>
-                                    <p class="text-xs text-gray-500">This action cannot be undone.</p>
-                                </div>
-                                <AntiforgeryToken />
-                                <button type="submit"
-                                        class="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700">
-                                    Delete Note
-                                </button>
-                            </form>
-                        </div>
-                    }
+                    <AuthorizeView Roles="Admin, Writer">
+                        @if (isEditMode)
+                        {
+                            <div class="mt-6 border-t border-gray-200 pt-6">
+                                <form @onsubmit="DeleteNote" @formname="DeleteNoteForm" method="post"
+                                      class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">Delete this note</p>
+                                        <p class="text-xs text-gray-500">This action cannot be undone.</p>
+                                    </div>
+                                    <AntiforgeryToken />
+                                    <button type="submit"
+                                            class="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700">
+                                        Delete Note
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                    </AuthorizeView>
                 }
             </div>
         </div>
