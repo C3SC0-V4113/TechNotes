@@ -47,6 +47,7 @@ namespace TechNotes.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(email) ?? new User { UserName = email, Email = email, EmailConfirmed = true };
                 await _userManager.CreateAsync(user);
+                await _userManager.AddToRoleAsync(user, "Reader");
                 await _userManager.AddLoginAsync(user, info);
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return Redirect("/notes");
