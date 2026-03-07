@@ -1,9 +1,30 @@
 ﻿@page "/user-overview"
+@using TechNotes.Application.Users
+@using TechNotes.Application.Users.GetUsers
 @inject ISender Sender;
 @rendermode @(new InteractiveServerRenderMode())
 @attribute [Authorize(Roles = "Admin")]
 
 <h1 class="text-3xl font-bold text-blue-900 tracking-tight">User Overview</h1>
-@code {
+<ul>
+    @foreach (var user in users)
+    {
+        <li>@user.UserName - @user.Email</li>
+    }
+</ul>
 
+@code {
+    private List<UserResponse> users = new();
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Sender.Send(new GetUsersQuery());
+        if (result.IsSuccessful && result.Value != null)
+        {
+            users = result.Value;
+        }
+        else
+        {
+            users = new List<UserResponse>();
+        }
+    }
 }
