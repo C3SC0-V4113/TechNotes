@@ -1,4 +1,6 @@
-﻿@if (ShowModal)
+﻿@using TechNotes.Application.Users.GetUserRoles
+@inject ISender Sender;
+@if (ShowModal)
 {
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
         <div class="relative w-full max-w-lg sm:max-w-xl bg-white rounded-xl shadow-xl p-4 sm:p-5">
@@ -107,7 +109,7 @@
         Console.WriteLine($"UserId in Modal: {UserId}");
         if (ShowModal && UserId != null)
         {
-            Roles = new List<string> { "Test-1", "Test-2" };
+            await LoadUserRoles();
         }
     }
 
@@ -134,5 +136,21 @@
         UserName = string.Empty;
         ModalClosed.InvokeAsync(true);
         Console.WriteLine("Modal closed");
+    }
+
+    private async Task LoadUserRoles()
+    {
+        if (ShowModal && !string.IsNullOrEmpty(UserId))
+        {
+            var result = await Sender.Send(new GetUserRolesQuery { UserId = UserId });
+            if (result.IsSuccessful && result.Value != null)
+            {
+                Roles = result.Value;
+            }
+            else
+            {
+                Roles = new List<string>();
+            }
+        }
     }
 }
