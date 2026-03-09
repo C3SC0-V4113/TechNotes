@@ -42,6 +42,7 @@ else
         </QuickGrid>
     </div>
 }
+<UserRolesModal UserId="@selectedUserId" UserName="@selectedUserName" ShowModal="@showModal" ModalClosed="CloseModal" />
 @code {
     private List<UserResponse> users = new();
     private bool showModal = false;
