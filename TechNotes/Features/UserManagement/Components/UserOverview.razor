@@ -50,15 +50,7 @@ else
     private string selectedUserName = string.Empty;
     protected override async Task OnInitializedAsync()
     {
-        var result = await Sender.Send(new GetUsersQuery());
-        if (result.IsSuccessful && result.Value != null)
-        {
-            users = result.Value;
-        }
-        else
-        {
-            users = new List<UserResponse>();
-        }
+        await LoadUsers();
     }
 
     private void OpenModal(string userId, string userName)
@@ -69,11 +61,25 @@ else
         Console.WriteLine($"Selected User ID: {selectedUserId}, User Name: {selectedUserName}");
     }
 
-    private void CloseModal()
+    private async void CloseModal()
     {
         showModal = false;
         selectedUserId = string.Empty;
         selectedUserName = string.Empty;
-        Console.WriteLine("Modal closed");
+        await LoadUsers();
+        StateHasChanged();
+    }
+
+    private async Task LoadUsers()
+    {
+        var result = await Sender.Send(new GetUsersQuery());
+        if (result.IsSuccessful && result.Value != null)
+        {
+            users = result.Value;
+        }
+        else
+        {
+            users = new List<UserResponse>();
+        }
     }
 }
