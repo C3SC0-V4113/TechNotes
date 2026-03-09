@@ -1,4 +1,5 @@
-﻿@using TechNotes.Application.Users.GetUserRoles
+﻿@using TechNotes.Application.Users.AddRoleToUser
+@using TechNotes.Application.Users.GetUserRoles
 @inject ISender Sender;
 @if (ShowModal)
 {
@@ -117,9 +118,13 @@
     {
         if (!string.IsNullOrWhiteSpace(newRole))
         {
-            Roles.Add(newRole.Trim());
+            await Sender.Send(new AddRoleToUserCommand
+            {
+                Role = newRole,
+                UserId = UserId
+            });
+            await LoadUserRoles();
             newRole = string.Empty;
-            await InvokeAsync(StateHasChanged);
         }
     }
 

@@ -11,12 +11,37 @@ public class UserService : IUserService
     private readonly UserManager<User> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly INoteRepository _noteRepository;
-    public UserService(UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, INoteRepository noteRepository)
+    private readonly RoleManager<IdentityRole> _roleManager;
+    public UserService(UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, INoteRepository noteRepository, RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
         _noteRepository = noteRepository;
+        _roleManager = roleManager;
     }
+
+    public async Task AddUserRoleAsync(string userId, string role)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            throw new UserNotAuthorizedException();
+        }
+        if (!await _roleManager.RoleExistsAsync(role))
+        {
+            var roleResult = _roleManager.CreateAsync(new IdentityRole(role));
+            if (!roleResult.Result.Succeeded)
+            {
+                throw new Exception($"Failed to create role: {role}");
+            }
+        }
+        var result = await _userManager.AddToRoleAsync(user, role);
+        if (!result.Succeeded)
+        {
+            throw new Exception($"Failed to add role '{role}' to user '{user.UserName}': {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        }
+    }
+
     public async Task<bool> CurrentUserCanCreateNoteAsync()
     {
         var user = await GetCurrentUserAsync();
