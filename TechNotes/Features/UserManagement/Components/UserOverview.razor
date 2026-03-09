@@ -22,6 +22,7 @@ else
         <QuickGrid class="w-full table-auto bg-white" Items="@users.AsQueryable()">
             <PropertyColumn class="border-2" Property="@(u => u.UserName)" Sortable="true" Title="Nombre de usuario" />
             <PropertyColumn class="border-2" Property="@(u => u.Email)" Sortable="true" Title="Correo electronico" />
+            <PropertyColumn class="border-2" Property="@(u => u.Roles)" Title="Roles" />
         </QuickGrid>
     </div>
 }

@@ -6,4 +6,5 @@ public interface IUserService
     Task<bool> IsCurrentUserInRoleAsync(string role);
     Task<bool> CurrentUserCanCreateNoteAsync();
     Task<bool> CurrentUserCanEditNoteAsync(int noteId);
+    Task<string[]> GetUserRolesAsync(string userId);
 }

@@ -59,6 +59,17 @@ public class UserService : IUserService
         return user.Id;
     }
 
+    public async Task<string[]> GetUserRolesAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            return [];
+        }
+        var roles = await _userManager.GetRolesAsync(new User { Id = user.Id });
+        return roles.ToArray();
+    }
+
     public async Task<bool> IsCurrentUserInRoleAsync(string role)
     {
         var user = await GetCurrentUserAsync();
