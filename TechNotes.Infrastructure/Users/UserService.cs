@@ -107,15 +107,11 @@ public class UserService : IUserService
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            throw new UserNotAuthorizedException();
+            throw new Exception("User not found");
         }
         if (!await _roleManager.RoleExistsAsync(roleName))
         {
-            var roleResult = _roleManager.CreateAsync(new IdentityRole(roleName));
-            if (!roleResult.Result.Succeeded)
-            {
-                throw new Exception($"Failed to create role: {roleName}");
-            }
+            throw new Exception($"Failed to find role: {roleName}");
         }
         var result = await _userManager.RemoveFromRoleAsync(user, roleName);
         if (!result.Succeeded)
