@@ -102,6 +102,28 @@ public class UserService : IUserService
         return isUserInRole;
     }
 
+    public async Task RemoveRoleFromUserAsync(string userId, string roleName)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            throw new UserNotAuthorizedException();
+        }
+        if (!await _roleManager.RoleExistsAsync(roleName))
+        {
+            var roleResult = _roleManager.CreateAsync(new IdentityRole(roleName));
+            if (!roleResult.Result.Succeeded)
+            {
+                throw new Exception($"Failed to create role: {roleName}");
+            }
+        }
+        var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+        if (!result.Succeeded)
+        {
+            throw new Exception($"Failed to remove role '{roleName}' to user '{user.UserName}': {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        }
+    }
+
     private async Task<User?> GetCurrentUserAsync()
     {
         var httpContext = _httpContextAccessor.HttpContext;

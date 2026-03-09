@@ -1,6 +1,4 @@
-﻿@using TechNotes.Application.Users.AddRoleToUser
-@using TechNotes.Application.Users.GetUserRoles
-@inject ISender Sender;
+﻿@inject ISender Sender;
 @if (ShowModal)
 {
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -130,8 +128,12 @@
 
     private async Task RemoveRole(string role)
     {
-        Roles.Remove(role);
-        await InvokeAsync(StateHasChanged);
+        await Sender.Send(new RemoveRoleFromUserCommand
+        {
+            Role = role,
+            UserId = UserId
+        });
+        await LoadUserRoles();
     }
 
     private void CloseModal()
