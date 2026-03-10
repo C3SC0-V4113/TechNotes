@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TechNotes.Client\TechNotes.Client.csproj" />
     <ProjectReference Include="..\TechNotes.Infrastructure\TechNotes.Infrastructure.csproj" />
   </ItemGroup>
 
