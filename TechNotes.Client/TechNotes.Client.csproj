@@ -17,4 +17,8 @@
     <Folder Include="Features\Notes\Components\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TechNotes.Application\TechNotes.Application.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,8 +1,42 @@
 ﻿@page "/note-overview"
-@rendermode InteractiveWebAssembly
+@using TechNotes.Application.Notes
+@using TechNotes.Domain.Abstractions
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+@inject HttpClient Http
 
 <h3>NoteOverview</h3>
+@if (_notes == null)
+{
+    <p>Cargando notas...</p>
+}
+else if (_notes.Count == 0)
+{
+    <p>No se encontraron notas</p>
+}
+else
+{
+    <ul>
+        @foreach (var note in _notes)
+        {
+            <li>@note.Title</li>
+            <li>@note.Content</li>
+            <li>@note.PublishedAt</li>
+        }
+    </ul>
+}
 
 @code {
-
+    private List<NoteResponse>? _notes;
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Http.GetFromJsonAsync<List<NoteResponse>>("api/notes");
+        if (result != null)
+        {
+            _notes = result;
+        }
+        else
+        {
+            _notes = [];
+        }
+    }
 }
