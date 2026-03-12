@@ -1,7 +1,7 @@
 ﻿@page "/note-overview"
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
-@inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject INotesOverviewService NotesOverviewServiceClient
 <PageTitle>Note Overview</PageTitle>
 
 <h2 class="text-5xl font-bold text-center mb-3">My Notes</h2>
@@ -42,6 +42,10 @@ else
                                       d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </button>
+                        <button @onclick="() => TogglePublishNote(context.Id)"
+                                class="px-3 py-1 text-xs font-medium rounded-full @(context.IsPublished ? "bg-red-100 text-red-800 hover:bg-red-200" : "bg-green-100 text-green-800 hover:bg-green-200")">
+                            @(context.IsPublished ? "Unpublish" : "Publish")
+                        </button>
                     </div>
                 </TemplateColumn>
             </QuickGrid>
@@ -53,7 +57,7 @@ else
     private List<NoteResponse>? _notes;
     protected override async Task OnInitializedAsync()
     {
-        var result = await Http.GetFromJsonAsync<List<NoteResponse>>("api/notes");
+        var result = await NotesOverviewServiceClient.GetNotesByCurrentUserAsync();
         if (result != null)
         {
             _notes = result;
@@ -67,5 +71,23 @@ else
     private void EditNote(int idNote)
     {
         NavigationManager.NavigateTo($"/note-editor/{idNote}");
+    }
+
+    private async Task TogglePublishNote(int idNote)
+    {
+        var updatedNote = await NotesOverviewServiceClient.TogglePublishedNoteAsync(idNote);
+        if (updatedNote != null && _notes != null)
+        {
+            var index = _notes.FindIndex(note => note.Id == idNote);
+            if (index != -1)
+            {
+                _notes[index] = (NoteResponse)updatedNote;
+                StateHasChanged();
+            }
+            else
+            {
+                Console.Error.WriteLine("Error updating note state");
+            }
+        }
     }
 }
