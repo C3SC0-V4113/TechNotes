@@ -1,28 +1,52 @@
 ﻿@page "/note-overview"
-@using TechNotes.Application.Notes
-@using TechNotes.Domain.Abstractions
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
+<PageTitle>Note Overview</PageTitle>
 
-<h3>NoteOverview</h3>
+<h2 class="text-5xl font-bold text-center mb-3">My Notes</h2>
 @if (_notes == null)
 {
-    <p>Cargando notas...</p>
+    <p><em>Cargando notas...</em></p>
 }
 else if (_notes.Count == 0)
 {
-    <p>No se encontraron notas</p>
+    <p><em>No se encontraron notas</em></p>
 }
 else
 {
-    <ul>
-        @foreach (var note in _notes)
-        {
-            <li>@note.Title</li>
-            <li>@note.Content</li>
-            <li>@note.PublishedAt</li>
-        }
-    </ul>
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="border border-gray-200 rounded-lg shadow-sm">
+            <QuickGrid Class="w-full table-fixed" AutoGenerateColumns="false" Items="@_notes.AsQueryable()">
+                <PropertyColumn Class="border-2 p-2" Sortable="true" Property="@(n => n.Title)" Title="Title" />
+                <TemplateColumn Class="border-2 p-2" Title="Content">
+                    <div class="block max-w-xs truncate text-gray-700" title="@context.Content">
+                        @context.Content
+                    </div>
+                </TemplateColumn>
+                <PropertyColumn class="border-2 p-2" Sortable="true"
+                                Property="@(n => n.PublishedAt.HasValue ? n.PublishedAt.Value.ToShortDateString() : "N/A")"
+                                Title="Published At" />
+                <TemplateColumn Title="Published" Class="border-2 p-2">
+                    <div class="flex justify-center">
+                        <span>@(context.IsPublished ? "✅" : "❌")</span>
+                    </div>
+                </TemplateColumn>
+                <TemplateColumn class="border-2 p-1" Title="Edit">
+                    <div class="flex justify-center">
+                        <button @onclick="() => EditNote(context.Id)" aria-label="Editar nota"
+                                class="inline-flex items-center justify-center w-30 h-30 rounded-md text-blue-600 hover:bg-blue-50 hover:text-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                 class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </button>
+                    </div>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
+    </div>
 }
 
 @code {
@@ -38,5 +62,10 @@ else
         {
             _notes = [];
         }
+    }
+
+    private void EditNote(int idNote)
+    {
+        NavigationManager.NavigateTo($"/note-editor/{idNote}");
     }
 }
