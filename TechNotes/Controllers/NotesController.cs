@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TechNotes.Application.Notes;
 using TechNotes.Application.Notes.GetNotesByCurrentUser;
+using TechNotes.Application.Notes.TogglePublishedNote;
 
 namespace TechNotes.Controllers
 {
@@ -20,6 +21,20 @@ namespace TechNotes.Controllers
         public async Task<ActionResult<List<NoteResponse>>> GetNotesByCurrentUser()
         {
             var result = await _sender.Send(new GetNotesByCurrentUserQuery());
+            if (result.HasFailed)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult<NoteResponse>> TogglePublishedNote(int id)
+        {
+            var command = new TogglePublishedNoteCommand
+            {
+                NoteId = id
+            };
+            var result = await _sender.Send(command);
             if (result.HasFailed)
             {
                 return BadRequest(result.ErrorMessage);
