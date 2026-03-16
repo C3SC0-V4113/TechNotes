@@ -1,5 +1,3 @@
-using MediatR;
-
 namespace TechNotes.Application.Abstractions.RequestHandling;
 
 public interface ICommand : IRequest<Result>
